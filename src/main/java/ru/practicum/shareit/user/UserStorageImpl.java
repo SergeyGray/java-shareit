@@ -1,7 +1,7 @@
 package ru.practicum.shareit.user;
 
 import org.springframework.stereotype.Component;
-import ru.practicum.shareit.error.UserStorageException;
+import ru.practicum.shareit.exception.UserStorageException;
 
 import java.util.ArrayList;
 import java.util.DuplicateFormatFlagsException;

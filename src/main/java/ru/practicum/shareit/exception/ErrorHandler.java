@@ -1,4 +1,4 @@
-package ru.practicum.shareit.error;
+package ru.practicum.shareit.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -11,7 +11,7 @@ import java.util.DuplicateFormatFlagsException;
 @RestControllerAdvice
 public class ErrorHandler {
 
-    @ExceptionHandler({UserStorageException.class})
+    @ExceptionHandler({UserStorageException.class, ItemStorageException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleUserStorageException(final RuntimeException e) {
         return new ErrorResponse("Error", e.getMessage());
