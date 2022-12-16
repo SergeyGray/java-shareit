@@ -58,9 +58,9 @@ public class ItemStorageImpl implements ItemStorage {
     public List<Item> searchItem(String text) {
         if (text.isEmpty())
             return new ArrayList<Item>();
-        return items.stream().filter(item -> item.getAvailable()).
-                filter(item -> item.getDescription().toLowerCase().contains(text.toLowerCase()) ||
-                        item.getName().toLowerCase().contains(text.toLowerCase())).
-                collect(Collectors.toList());
+        return items.stream().filter(item -> item.getAvailable())
+                .filter(item -> item.getDescription().toLowerCase().contains(text.toLowerCase())
+                || item.getName().toLowerCase().contains(text.toLowerCase()))
+                .collect(Collectors.toList());
     }
 }
