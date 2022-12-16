@@ -11,16 +11,17 @@ import java.util.List;
 public class UserStorageImpl implements UserStorage {
 
     private final List<User> users = new ArrayList<>();
-    private int id =0;
+    private int id = 0;
 
     @Override
     public List<User> getAllUsers() {
         return users;
     }
+
     @Override
     public User getUser(int id) {
-        for(User user:users){
-            if(user.getId() == id){
+        for (User user : users) {
+            if (user.getId() == id) {
                 return user;
             }
         }
@@ -34,20 +35,22 @@ public class UserStorageImpl implements UserStorage {
         users.add(user);
         return user;
     }
+
     @Override
     public User updateUser(User user) {
         checkDuplicateEmail(user.getEmail());
         User temporaryUser = getUser(user.getId());
         users.remove(getUser(temporaryUser.getId()));
-        if(user.getEmail() == null){
+        if (user.getEmail() == null) {
             user.setEmail(temporaryUser.getEmail());
         }
-        if(user.getName() == null){
+        if (user.getName() == null) {
             user.setName(temporaryUser.getName());
         }
         users.add(user);
         return user;
     }
+
     @Override
     public void deleteUser(int id) {
         User user = getUser(id);
@@ -56,8 +59,8 @@ public class UserStorageImpl implements UserStorage {
 
     private void checkDuplicateEmail(String email) {
         if (email == null)
-                return;
-        if(users.stream().anyMatch(user -> email.equals(user.getEmail())))
+            return;
+        if (users.stream().anyMatch(user -> email.equals(user.getEmail())))
             throw new DuplicateFormatFlagsException(email);
     }
 }

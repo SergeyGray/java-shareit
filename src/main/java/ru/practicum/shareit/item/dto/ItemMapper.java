@@ -11,6 +11,7 @@ public class ItemMapper {
                 item.getRequest() != null ? item.getRequest().getId() : null
         );
     }
+
     public static Item toItem(int owner, ItemDto itemDto) {
         return new Item(
                 itemDto.getName(),
@@ -20,7 +21,8 @@ public class ItemMapper {
                 null
         );
     }
-    public static Item toItem(int owner, int id,ItemDto itemDto) {
+
+    public static Item toItem(int owner, int id, ItemDto itemDto) {
         return new Item(
                 id,
                 itemDto.getName(),

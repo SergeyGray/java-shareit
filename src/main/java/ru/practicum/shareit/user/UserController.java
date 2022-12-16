@@ -19,18 +19,22 @@ public class UserController {
     public User getUser(@PathVariable Integer id) {
         return userService.getUser(id);
     }
+
     @GetMapping()
     public List<User> getAllUser() {
         return userService.getAllUser();
     }
+
     @PostMapping()
     public User createUser(@Valid @RequestBody UserDto userDto) {
         return userService.saveUser(userDto);
     }
+
     @PatchMapping("/{id}")
     public User updateUser(@PathVariable Integer id, @RequestBody UserDto userDto) {
         return userService.updateUser(id, userDto);
     }
+
     @DeleteMapping("/{id}")
     public void updateUser(@PathVariable Integer id) {
         userService.deleteUser(id);
