@@ -1,4 +1,4 @@
-package ru.practicum.shareit.user.userDto;
+package ru.practicum.shareit.user.user_dto;
 
 import ru.practicum.shareit.user.User;
 

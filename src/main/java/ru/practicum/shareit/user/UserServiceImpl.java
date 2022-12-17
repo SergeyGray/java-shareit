@@ -2,8 +2,8 @@ package ru.practicum.shareit.user;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.user.userDto.UserDto;
-import ru.practicum.shareit.user.userDto.UserMapper;
+import ru.practicum.shareit.user.user_dto.UserDto;
+import ru.practicum.shareit.user.user_dto.UserMapper;
 
 import java.util.List;
 
