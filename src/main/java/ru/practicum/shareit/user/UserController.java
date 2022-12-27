@@ -6,6 +6,7 @@ import ru.practicum.shareit.user.user_dto.UserDto;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
