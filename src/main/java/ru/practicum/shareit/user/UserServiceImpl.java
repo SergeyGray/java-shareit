@@ -19,7 +19,7 @@ public class UserServiceImpl implements UserService {
     public User getUser(int id) {
         try {
             return userRepository.findById(id).get();
-        } catch (NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             throw new UserStorageException("Пользователя не существует");
         }
     }
@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(Integer id, UserDto userDto) {
-        User temporaryUser= getUser(id);
+        User temporaryUser = getUser(id);
         User user = UserMapper.toUser(id, userDto);
         if (user.getEmail() == null) {
             user.setEmail(temporaryUser.getEmail());

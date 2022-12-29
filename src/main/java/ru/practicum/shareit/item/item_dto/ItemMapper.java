@@ -8,11 +8,11 @@ public class ItemMapper {
                 item.getName(),
                 item.getDescription(),
                 item.getAvailable(),
-                item.getRequest() != null ? item.getRequest().getId() : null
+                item.getRequest() != null ? item.getRequest() : null
         );
     }
 
-    public static Item toItem(int owner, ItemDto itemDto) {
+    public static Item toItem(Integer owner, ItemDto itemDto) {
         return new Item(
                 itemDto.getName(),
                 itemDto.getDescription(),
@@ -22,7 +22,7 @@ public class ItemMapper {
         );
     }
 
-    public static Item toItem(int owner, int id, ItemDto itemDto) {
+    public static Item toItem(Integer owner, int id, ItemDto itemDto) {
         return new Item(
                 id,
                 itemDto.getName(),

@@ -41,16 +41,7 @@ public class ItemStorageImpl implements ItemStorage {
     @Override
     public Item updateItem(Item item) {
         Item temporaryItem = getItem(item.getId());
-        if (!item.getOwner().equals(temporaryItem.getOwner()))
-            throw new ItemStorageException("Неверно указан владелец вещи");
-        items.remove(getItem(temporaryItem.getId()));
-        if (item.getAvailable() == null)
-            item.setAvailable(temporaryItem.getAvailable());
-        if (item.getName() == null)
-            item.setName(temporaryItem.getName());
-        if (item.getDescription() == null)
-            item.setDescription(temporaryItem.getDescription());
-        items.add(item);
+
         return item;
     }
 
@@ -60,7 +51,7 @@ public class ItemStorageImpl implements ItemStorage {
             return new ArrayList<>();
         return items.stream().filter(Item::getAvailable)
                 .filter(item -> item.getDescription().toLowerCase().contains(text.toLowerCase())
-                || item.getName().toLowerCase().contains(text.toLowerCase()))
+                        || item.getName().toLowerCase().contains(text.toLowerCase()))
                 .collect(Collectors.toList());
     }
 }
