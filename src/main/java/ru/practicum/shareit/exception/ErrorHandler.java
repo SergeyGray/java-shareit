@@ -6,17 +6,22 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.xml.bind.ValidationException;
 import java.util.DuplicateFormatFlagsException;
 
 @RestControllerAdvice
 public class ErrorHandler {
 
-    @ExceptionHandler({UserStorageException.class, ItemStorageException.class})
+    @ExceptionHandler({UserStorageException.class, ItemStorageException.class, BookingStorageException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleUserStorageException(final RuntimeException e) {
         return new ErrorResponse("Error", e.getMessage());
     }
-
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleBookingStorageException(final BadRequestException e) {
+        return new ErrorResponse("Error", "Неверный запрос");
+    }
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {

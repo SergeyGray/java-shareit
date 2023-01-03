@@ -14,8 +14,6 @@ import java.util.NoSuchElementException;
 @Service
 @AllArgsConstructor
 public class ItemServiceImpl implements ItemService {
-
-    private ItemStorage itemStorage;
     private ItemRepository itemRepository;
     private UserService userService;
 
@@ -71,4 +69,5 @@ public class ItemServiceImpl implements ItemService {
         }
         return itemRepository.searchItem(text, owner);
     }
+
 }

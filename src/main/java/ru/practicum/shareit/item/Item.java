@@ -18,13 +18,14 @@ public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @NotBlank
+
     private String name;
-    @NotBlank
+
     private String description;
+
     @Column(name = "is_available")
     private Boolean available;
-    @NotNull
+
     @Column(name = "owner_id")
     private Integer owner;
     @Column(name = "request_id")
