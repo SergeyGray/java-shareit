@@ -6,11 +6,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import javax.xml.bind.ValidationException;
 import java.util.DuplicateFormatFlagsException;
 
 @RestControllerAdvice
 public class ErrorHandler {
+
 
     @ExceptionHandler({UserStorageException.class, ItemStorageException.class, BookingStorageException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -20,7 +20,7 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleBookingStorageException(final BadRequestException e) {
-        return new ErrorResponse("Error", "Неверный запрос");
+        return new ErrorResponse(e.getMessage(), "Неверный запрос");
     }
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -37,6 +37,6 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleException(final Throwable e) {
-        return new ErrorResponse("Error", "Внутреняя ошибка сервера");
+        return new ErrorResponse(e.getMessage(), "Внутреняя ошибка сервера");
     }
 }

@@ -16,5 +16,15 @@ public class BookingMapper {
             BookingStatus.WAITING
     );
     }
+    public static BookingResponseDto toBookingResponseDto (Booking booking){
+        return new BookingResponseDto(
+                booking.getId(),
+                null,
+                null,
+                booking.getStart(),
+                booking.getEnd(),
+                booking.getStatus()
+        );
+    }
 
 }

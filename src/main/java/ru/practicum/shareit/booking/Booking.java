@@ -32,7 +32,7 @@ public class Booking {
     @Column(name = "booker_id")
     private int bookerId;
 
-    @Column(name = "booking_status")
+    @Enumerated(EnumType.STRING)
     private BookingStatus status ;
 
     public Booking(LocalDateTime start, LocalDateTime end, int itemId, int booker, BookingStatus status) {
