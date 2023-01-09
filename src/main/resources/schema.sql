@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS items (
                                        request_id BIGINT ,
                                        CONSTRAINT pk_item PRIMARY KEY (id),
                                        CONSTRAINT owner_id_fk FOREIGN KEY (owner_id) REFERENCES users (id),
-                                       CONSTRAINT requst_id_fk FOREIGN KEY (request_id) REFERENCES requests (id)
+                                       CONSTRAINT request_id_fk FOREIGN KEY (request_id) REFERENCES requests (id)
   );
 CREATE TYPE booking_status AS ENUM ('waiting','approved','rejected','canceled');
 
@@ -38,9 +38,10 @@ CREATE TABLE IF NOT EXISTS bookings (
 );
 CREATE TABLE IF NOT EXISTS comments(
                                         id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY ,
-                                        description VARCHAR(512) NOT NULL,
+                                        text VARCHAR(512) NOT NULL,
                                         item_id  BIGINT NOT NULL,
                                         author_id BIGINT NOT NULL,
+                                        created TIMESTAMP WITHOUT TIME ZONE NOT NULL,
                                         CONSTRAINT item_comment_id_fk FOREIGN KEY (item_id) REFERENCES items(id),
-                                        CONSTRAINT author_id_fk FOREIGN KEY (author_id) REFERENCES users(id)
+                                        CONSTRAINT author_fk FOREIGN KEY (author_id) REFERENCES users(id)
 );

@@ -3,8 +3,6 @@ package ru.practicum.shareit.booking;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.shareit.item.Item;
-import ru.practicum.shareit.user.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -12,7 +10,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "bookings")
-@AllArgsConstructor @NoArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class Booking {
 
@@ -23,7 +22,7 @@ public class Booking {
     @Column(name = "start_date")
     private LocalDateTime start;
 
-    @Column(name ="end_date")
+    @Column(name = "end_date")
     private LocalDateTime end;
 
     @Column(name = "item_id")
@@ -33,7 +32,7 @@ public class Booking {
     private int bookerId;
 
     @Enumerated(EnumType.STRING)
-    private BookingStatus status ;
+    private BookingStatus status;
 
     public Booking(LocalDateTime start, LocalDateTime end, int itemId, int booker, BookingStatus status) {
         this.start = start;

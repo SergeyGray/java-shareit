@@ -11,9 +11,6 @@ import ru.practicum.shareit.item.ItemService;
 import ru.practicum.shareit.item.item_dto.ItemMapper;
 import ru.practicum.shareit.user.UserService;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -22,23 +19,21 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @AllArgsConstructor
-public class BookingServiceImpl implements BookingService{
+public class BookingServiceImpl implements BookingService {
 
     private BookingRepository bookingRepository;
     private ItemService itemService;
     private UserService userService;
 
     @Override
-    public BookingResponseDto saveBooking(Booking booking){
+    public BookingResponseDto saveBooking(Booking booking) {
         BookingResponseDto response = mapperToResponse(booking);
-        if(!response.getItem().getAvailable() |
-                response.getStart().isAfter(response.getEnd()))
-        {
+        if (!response.getItem().getAvailable() |
+                response.getStart().isAfter(response.getEnd())) {
             throw new BadRequestException("Ошибка при валидации бронирования");
         }
-        if(response.getItem().getOwner().equals(response.getBooker().getId()))
-        {
-        throw new BookingStorageException("Владелец вещи не может бронировать вещь");
+        if (response.getItem().getOwner().equals(response.getBooker().getId())) {
+            throw new BookingStorageException("Владелец вещи не может бронировать вещь");
         }
         response.setId(bookingRepository.save(booking).getId());
         return response;
@@ -49,12 +44,12 @@ public class BookingServiceImpl implements BookingService{
         BookingStatus status;
         Optional<Booking> booking;
         status = (approved) ? BookingStatus.APPROVED : BookingStatus.REJECTED;
-        booking = bookingRepository.findBookingByOwnerItem(bookingId,owner);
+        booking = bookingRepository.findBookingByOwnerItem(bookingId, owner);
 
-        if(!booking.isPresent()){
+        if (!booking.isPresent()) {
             throw new BookingStorageException("Неккоретный владелец вещи");
         }
-        if(status == booking.get().getStatus()){
+        if (status == booking.get().getStatus()) {
             throw new BadRequestException("Одиннаковый статус");
         }
         booking.get().setStatus(status);
@@ -63,12 +58,13 @@ public class BookingServiceImpl implements BookingService{
 
     @Override
     public BookingResponseDto getBooking(int requestor, Integer bookingId) {
-        Optional<Booking> booking = bookingRepository.getBooking(requestor,bookingId);
-        if (!booking.isPresent()){
+        Optional<Booking> booking = bookingRepository.getBooking(requestor, bookingId);
+        if (!booking.isPresent()) {
             throw new BookingStorageException("Бронирование не найдено");
         }
         return mapperToResponse(booking.get());
     }
+
     @Override
     public List<BookingResponseDto> getAllBookings(int requestor, BookingState state) {
         List<Booking> bookings;
@@ -84,6 +80,12 @@ public class BookingServiceImpl implements BookingService{
                 break;
             case FUTURE:
                 bookings = bookingRepository.getAllBookingOnFuture(requestor);
+                break;
+            case CURRENT:
+                bookings = bookingRepository.getAllBookingOnCurrent(requestor);
+                break;
+            case PAST:
+                bookings = bookingRepository.getAllBookingOnPast(requestor);
                 break;
             default:
                 throw new BadRequestException(state.toString());
@@ -109,6 +111,12 @@ public class BookingServiceImpl implements BookingService{
             case WAITING:
                 bookings = bookingRepository.getAllBookingsForItemOwnerWaiting(owner);
                 break;
+            case CURRENT:
+                bookings = bookingRepository.getAllBookingsForItemOwnerCurrent(owner);
+                break;
+            case PAST:
+                bookings = bookingRepository.getAllBookingsForItemOwnerPast(owner);
+                break;
             default:
                 throw new BadRequestException(state.toString());
         }
@@ -117,9 +125,9 @@ public class BookingServiceImpl implements BookingService{
         return bookings.stream().map(booking -> mapperToResponse(booking)).collect(Collectors.toList());
     }
 
-    private BookingResponseDto mapperToResponse(Booking booking){
+    private BookingResponseDto mapperToResponse(Booking booking) {
         BookingResponseDto response = BookingMapper.toBookingResponseDto(booking);
-        response.setItem(ItemMapper.toItem(itemService.getItem(booking.getItemId(),0)));
+        response.setItem(ItemMapper.toItem(itemService.getItem(booking.getItemId(), 0)));
         response.setBooker(userService.getUser(booking.getBookerId()));
         return response;
     }

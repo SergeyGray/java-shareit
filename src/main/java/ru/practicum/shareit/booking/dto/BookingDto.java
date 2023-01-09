@@ -6,6 +6,7 @@ import lombok.Data;
 
 import javax.validation.constraints.Future;
 import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 public class BookingDto {

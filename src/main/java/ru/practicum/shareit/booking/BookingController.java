@@ -21,39 +21,43 @@ import java.util.List;
 public class BookingController {
 
     private BookingService bookingService;
+
     @PostMapping()
     public BookingResponseDto createBooking(@RequestHeader("X-Sharer-User-Id") int booker,
-                                         @Valid @RequestBody BookingDto bookingDto) {
-        return bookingService.saveBooking(BookingMapper.toBooking(booker,bookingDto));
+                                            @Valid @RequestBody BookingDto bookingDto) {
+        return bookingService.saveBooking(BookingMapper.toBooking(booker, bookingDto));
     }
+
     @PatchMapping("/{bookingId}")
     public BookingResponseDto changeBookingStatus(@RequestHeader("X-Sharer-User-Id") int owner,
-                                           @PathVariable Integer bookingId,
-                                           @RequestParam Boolean approved) {
-        return bookingService.changeBookingStatus(owner, bookingId,approved);
+                                                  @PathVariable Integer bookingId,
+                                                  @RequestParam Boolean approved) {
+        return bookingService.changeBookingStatus(owner, bookingId, approved);
     }
+
     @GetMapping("/{bookingId}")
     public BookingResponseDto getBooking(@RequestHeader("X-Sharer-User-Id") int requestor,
-                                               @PathVariable(required = false) Integer bookingId) {
+                                         @PathVariable(required = false) Integer bookingId) {
         return bookingService.getBooking(requestor, bookingId);
     }
 
     @GetMapping()
     public List<BookingResponseDto> getAllBookings(@RequestHeader("X-Sharer-User-Id") int requestor,
-                                                   @RequestParam(defaultValue = "ALL") String state)  {
-        try{
+                                                   @RequestParam(defaultValue = "ALL") String state) {
+        try {
             BookingState.valueOf(state);
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             throw new BadRequestException(state);
         }
-        return bookingService.getAllBookings(requestor,BookingState.valueOf(state));
+        return bookingService.getAllBookings(requestor, BookingState.valueOf(state));
     }
+
     @GetMapping("/owner")
     public List<BookingResponseDto> getAllBookingsForItemOwner(@RequestHeader("X-Sharer-User-Id") int requestor,
                                                                @RequestParam(defaultValue = "ALL") String state) {
-        try{
+        try {
             BookingState.valueOf(state);
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             throw new BadRequestException(state);
         }
         return bookingService.getAllBookingsForItemOwner(requestor, BookingState.valueOf(state));

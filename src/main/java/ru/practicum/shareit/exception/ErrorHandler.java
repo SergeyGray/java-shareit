@@ -17,11 +17,13 @@ public class ErrorHandler {
     public ErrorResponse handleUserStorageException(final RuntimeException e) {
         return new ErrorResponse("Error", e.getMessage());
     }
+
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleBookingStorageException(final BadRequestException e) {
         return new ErrorResponse(e.getMessage(), "Неверный запрос");
     }
+
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {

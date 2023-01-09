@@ -3,14 +3,6 @@ package ru.practicum.shareit.item.item_dto;
 import ru.practicum.shareit.item.Item;
 
 public class ItemMapper {
-    public static ItemDto toItemDto(Item item) {
-        return new ItemDto(
-                item.getName(),
-                item.getDescription(),
-                item.getAvailable(),
-                item.getRequest() != null ? item.getRequest() : null
-        );
-    }
 
     public static Item toItem(Integer owner, ItemDto itemDto) {
         return new Item(
@@ -44,6 +36,7 @@ public class ItemMapper {
                 null
         );
     }
+
     public static ItemResponseDTO toItemResponseDto(Item item) {
         return new ItemResponseDTO(
                 item.getId(),

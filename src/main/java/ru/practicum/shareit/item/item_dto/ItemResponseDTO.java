@@ -3,6 +3,10 @@ package ru.practicum.shareit.item.item_dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import ru.practicum.shareit.booking.Booking;
+import ru.practicum.shareit.item.comment_dto.CommentResponseDto;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Data
@@ -16,6 +20,7 @@ public class ItemResponseDTO {
     private Integer owner;
     private Booking lastBooking;
     private Booking nextBooking;
+    private List<CommentResponseDto> comments = new ArrayList<>();
 
     public ItemResponseDTO(int id, String name, String description, Boolean available, Integer owner, Integer request) {
         this.id = id;
