@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 
 
 @Service
-@Slf4j
 @AllArgsConstructor
 public class BookingServiceImpl implements BookingService {
 

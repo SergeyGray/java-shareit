@@ -15,7 +15,7 @@ public class ErrorHandler {
     @ExceptionHandler({UserStorageException.class, ItemStorageException.class, BookingStorageException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleUserStorageException(final RuntimeException e) {
-        return new ErrorResponse("Error", e.getMessage());
+        return new ErrorResponse("Ошибка", e.getMessage());
     }
 
     @ExceptionHandler

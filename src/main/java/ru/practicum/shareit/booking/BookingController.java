@@ -15,7 +15,6 @@ import java.util.List;
  * TODO Sprint add-bookings.
  */
 @RestController
-@Slf4j
 @AllArgsConstructor
 @RequestMapping(path = "/bookings")
 public class BookingController {

@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
 
-    List<Comment> findCommentsByItemId(int ItemId);
+
+    List<Comment> findCommentsByItemId(int itemId);
 
 }

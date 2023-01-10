@@ -3,6 +3,7 @@ package ru.practicum.shareit.item;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.exception.BadRequestException;
 import ru.practicum.shareit.exception.ItemStorageException;
@@ -12,6 +13,7 @@ import ru.practicum.shareit.item.comment_dto.CommentResponseDto;
 import ru.practicum.shareit.item.item_dto.ItemDto;
 import ru.practicum.shareit.item.item_dto.ItemMapper;
 import ru.practicum.shareit.item.item_dto.ItemResponseDTO;
+import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.UserService;
 
@@ -22,7 +24,6 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
-@Slf4j
 @AllArgsConstructor
 public class ItemServiceImpl implements ItemService {
     private final UserRepository userRepository;
@@ -57,17 +58,14 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemResponseDTO getItem(int id, int requestor) {
         try {
-            if (itemRepository.findItemByIdAndOwner(id, requestor).isPresent()) {
-                ItemResponseDTO item = ItemMapper.toItemResponseDto(itemRepository.findById(id).get());
+            ItemResponseDTO item = ItemMapper.toItemResponseDto(itemRepository.findById(id).get());
+            if (item.getOwner() == requestor) {
                 item.setLastBooking(bookingRepository.findLastBookingForItem(id, LocalDateTime.now()).orElse(null));
                 item.setNextBooking(bookingRepository.findNextBookingForItem(id, LocalDateTime.now()).orElse(null));
                 item.setComments(getCommentsForItem(item));
-                return item;
-            } else {
-                ItemResponseDTO item = ItemMapper.toItemResponseDto(itemRepository.findById(id).get());
+            } else
                 item.setComments(getCommentsForItem(item));
-                return item;
-            }
+            return item;
         } catch (NoSuchElementException e) {
             throw new ItemStorageException("Вещи не существует");
         }
@@ -83,11 +81,19 @@ public class ItemServiceImpl implements ItemService {
         }
         List<ItemResponseDTO> itemsResponseDto = items.stream().map(item -> ItemMapper.toItemResponseDto(item))
                 .collect(Collectors.toList());
-        itemsResponseDto.stream().forEach(itemResponseDTO -> itemResponseDTO.setLastBooking(bookingRepository.
-                findLastBookingForItem(itemResponseDTO.getId()
-                        , LocalDateTime.now()).orElse(null)));
-        itemsResponseDto.stream().forEach(itemResponseDTO -> itemResponseDTO.setNextBooking(bookingRepository
-                .findNextBookingForItem(itemResponseDTO.getId(), LocalDateTime.now()).orElse(null)));
+        List<Booking> bookingsForItems = bookingRepository.findApprovedBookingForItemId(itemsResponseDto.stream()
+                        .map(itemResponseDTO -> itemResponseDTO.getId()).collect(Collectors.toList()));
+        for(ItemResponseDTO item:itemsResponseDto){
+            for(Booking booking: bookingsForItems){
+                if(item.getId() == booking.getItemId() && booking.getEnd().isBefore(LocalDateTime.now())){
+                    item.setLastBooking(booking);
+                }
+                if(item.getId() == booking.getItemId() && booking.getStart().isAfter(LocalDateTime.now())
+                && item.getNextBooking() == null){
+                    item.setNextBooking(booking);
+                }
+            }
+        }
         return itemsResponseDto;
     }
 
@@ -117,10 +123,18 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private List<CommentResponseDto> getCommentsForItem(ItemResponseDTO item) {
-        return commentRepository.findCommentsByItemId(item.getId()).stream().map(comment ->
-                        CommentMapper.toCommentResponseDto(comment
-                                , userRepository.findById(comment.getId()).orElse(null)))
-                .collect(Collectors.toList());
+        List<CommentResponseDto> response = new ArrayList<>();
+        List<Comment> comments = commentRepository.findCommentsByItemId(item.getId());
+        List<User> usersForComment = userRepository.findAllById(comments.stream()
+                .map(comment -> comment.getAuthorId()).collect(Collectors.toList()));
+        for(Comment comment:comments){
+            for(User user:usersForComment){
+                if(comment.getAuthorId() == user.getId()){
+                    response.add(CommentMapper.toCommentResponseDto(comment,user));
+                }
+            }
+        }
+        return response;
     }
 
 }

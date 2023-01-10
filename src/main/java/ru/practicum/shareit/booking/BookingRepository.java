@@ -9,6 +9,9 @@ import java.util.Optional;
 
 public interface BookingRepository extends JpaRepository<Booking, Integer> {
 
+    @Query("SELECT b from Booking b  join Item i on b.itemId = i.id where i.id in ?1 and b.status = 'APPROVED' ORDER BY (b.start)")
+    List<Booking> findApprovedBookingForItemId(List<Integer> itemId);
+
     @Query("SELECT b from Booking b join Item i on b.itemId = i.id where b.id = ?1 and i.owner = ?2")
     Optional<Booking> findBookingByOwnerItem(int bookingId, int owner);
 
