@@ -1,7 +1,6 @@
 package ru.practicum.shareit.booking;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingMapper;
@@ -11,9 +10,7 @@ import ru.practicum.shareit.exception.BadRequestException;
 import javax.validation.Valid;
 import java.util.List;
 
-/**
- * TODO Sprint add-bookings.
- */
+
 @RestController
 @AllArgsConstructor
 @RequestMapping(path = "/bookings")
@@ -42,24 +39,28 @@ public class BookingController {
 
     @GetMapping()
     public List<BookingResponseDto> getAllBookings(@RequestHeader("X-Sharer-User-Id") int requestor,
-                                                   @RequestParam(defaultValue = "ALL") String state) {
+                                                   @RequestParam(defaultValue = "ALL") String state,
+                                                   @RequestParam(defaultValue = "0") Integer from,
+                                                   @RequestParam(defaultValue = "10") Integer size) {
         try {
             BookingState.valueOf(state);
         } catch (IllegalArgumentException e) {
             throw new BadRequestException(state);
         }
-        return bookingService.getAllBookings(requestor, BookingState.valueOf(state));
+        return bookingService.getAllBookings(requestor, BookingState.valueOf(state), from, size);
     }
 
     @GetMapping("/owner")
     public List<BookingResponseDto> getAllBookingsForItemOwner(@RequestHeader("X-Sharer-User-Id") int requestor,
-                                                               @RequestParam(defaultValue = "ALL") String state) {
+                                                               @RequestParam(defaultValue = "ALL") String state,
+                                                               @RequestParam(defaultValue = "0") Integer from,
+                                                               @RequestParam(defaultValue = "10") Integer size) {
         try {
             BookingState.valueOf(state);
         } catch (IllegalArgumentException e) {
             throw new BadRequestException(state);
         }
-        return bookingService.getAllBookingsForItemOwner(requestor, BookingState.valueOf(state));
+        return bookingService.getAllBookingsForItemOwner(requestor, BookingState.valueOf(state), from, size);
     }
 
 }

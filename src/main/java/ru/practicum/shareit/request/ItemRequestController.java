@@ -1,12 +1,45 @@
 package ru.practicum.shareit.request;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.request.dto.ItemRequestDto;
+import ru.practicum.shareit.request.dto.ItemRequestMapper;
+import ru.practicum.shareit.request.dto.ItemRequestResponseDto;
 
-/**
- * TODO Sprint add-item-requests.
- */
+import javax.validation.Valid;
+import java.util.List;
+
+
 @RestController
+@AllArgsConstructor
 @RequestMapping(path = "/requests")
 public class ItemRequestController {
+
+    private ItemRequestService itemRequestService;
+
+    @PostMapping()
+    public ItemRequestResponseDto createItemRequest(@RequestHeader("X-Sharer-User-Id") int requester,
+                                                    @Valid @RequestBody ItemRequestDto itemRequestDto) {
+        return itemRequestService.saveItemRequest(ItemRequestMapper.toItemRequest(requester, itemRequestDto));
+    }
+
+
+    @GetMapping()
+    public List<ItemRequestResponseDto> getItemRequests(@RequestHeader("X-Sharer-User-Id") int requester) {
+        return itemRequestService.getItemRequests(requester);
+    }
+
+    @GetMapping("/all")
+    public List<ItemRequestResponseDto> getAllItemRequest(@RequestHeader("X-Sharer-User-Id") int owner,
+                                                          @RequestParam(defaultValue = "0") Integer from,
+                                                          @RequestParam(defaultValue = "10") Integer size) {
+        return itemRequestService.getAllItemsRequests(owner, from, size);
+    }
+
+    @GetMapping("/{requestId}")
+    public ItemRequestResponseDto getItemRequest(@RequestHeader("X-Sharer-User-Id") int requester,
+                                                 @PathVariable Integer requestId) {
+        return itemRequestService.getItemRequest(requester, requestId);
+    }
+
 }
