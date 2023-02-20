@@ -51,7 +51,7 @@ public class ItemRequestServiceImp implements ItemRequestService {
         try {
             return findItemsForRequests(itemRequestRepository.findById(requestId)
                     .stream().collect(Collectors.toList())).get(0);
-        } catch (Exception e) {
+        } catch (IndexOutOfBoundsException e) {
             throw new ItemStorageException("Запрос на вещь не найден");
         }
 
