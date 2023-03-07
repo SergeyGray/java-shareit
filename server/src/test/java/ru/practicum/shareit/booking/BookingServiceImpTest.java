@@ -43,8 +43,8 @@ public class BookingServiceImpTest {
     @BeforeEach
     public void setup() {
         service = new BookingServiceImpl(repository, itemService, userService);
-        booking = new Booking(1, LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(2)
-                , 1, 1, BookingStatus.WAITING);
+        booking = new Booking(1, LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(2),
+                1, 1, BookingStatus.WAITING);
         bookingDto = new BookingDto(1, LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(2));
         item = new Item(1, "text", "description", true, 2, null);
         user = new User(1, "testName", "test@email.com");
@@ -87,8 +87,8 @@ public class BookingServiceImpTest {
         final BookingStorageException exception = Assertions.assertThrows(
                 BookingStorageException.class,
                 () -> service.saveBooking(booking));
-        assertEquals("Ошибка коллекции бронирований: Владелец вещи не может бронировать вещь"
-                , exception.getMessage());
+        assertEquals("Ошибка коллекции бронирований: Владелец вещи не может бронировать вещь",
+                exception.getMessage());
     }
 
     @Test

@@ -37,8 +37,8 @@ public class BookingControllerTest {
 
     @BeforeEach
     void setup() {
-        booking = new Booking(1, LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(2)
-                , 1, 1, BookingStatus.WAITING);
+        booking = new Booking(1, LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(2),
+                1, 1, BookingStatus.WAITING);
         bookingDto = new BookingDto(1, LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(2));
     }
 
