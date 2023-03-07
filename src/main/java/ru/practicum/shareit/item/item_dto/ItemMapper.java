@@ -10,7 +10,7 @@ public class ItemMapper {
                 itemDto.getDescription(),
                 itemDto.getAvailable(),
                 owner,
-                null
+                itemDto.getRequestId()
         );
     }
 

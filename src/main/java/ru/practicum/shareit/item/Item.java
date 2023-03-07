@@ -28,14 +28,14 @@ public class Item {
     @Column(name = "owner_id")
     private Integer owner;
     @Column(name = "request_id")
-    private Integer request;
+    private Integer requestId;
 
     public Item(String name, String description, Boolean available, Integer owner, Integer request) {
         this.name = name;
         this.description = description;
         this.available = available;
         this.owner = owner;
-        this.request = request;
+        this.requestId = request;
     }
 
 }

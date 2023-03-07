@@ -1,5 +1,7 @@
 package ru.practicum.shareit.booking;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -21,61 +23,58 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
 
     @Query("SELECT b from Booking b join Item i on b.itemId = i.id" +
             " where (i.owner = ?1 or b.bookerId = ?1) ORDER BY (b.start) desc ")
-    List<Booking> getAllBooking(int requestor);
+    Page<Booking> getAllBooking(int requestor, Pageable page);
 
     @Query("SELECT b from Booking b join Item i on b.itemId = i.id" +
             " where b.bookerId = ?1 and b.status = 'REJECTED' ORDER BY (b.start) desc ")
-    List<Booking> getAllBookingRejected(int requestor);
+    Page<Booking> getAllBookingRejected(int requestor, Pageable page);
 
     @Query("SELECT b from Booking b join Item i on b.itemId = i.id" +
             " where b.bookerId = ?1 and b.status = 'WAITING' ORDER BY (b.start) desc ")
-    List<Booking> getAllBookingWaiting(int requestor);
+    Page<Booking> getAllBookingWaiting(int requestor, Pageable page);
 
     @Query("SELECT b from Booking b join Item i on b.itemId = i.id" +
             " where (i.owner = ?1 or b.bookerId = ?1) and current_timestamp < b.start ORDER BY (b.start) desc ")
-    List<Booking> getAllBookingOnFuture(int requestor);
+    Page<Booking> getAllBookingOnFuture(int requestor, Pageable page);
 
     @Query("SELECT b from Booking b join Item i on b.itemId = i.id" +
             " where (i.owner = ?1 or b.bookerId = ?1) and current_timestamp > b.end ORDER BY (b.start) desc ")
-    List<Booking> getAllBookingOnPast(int requestor);
+    Page<Booking> getAllBookingOnPast(int requestor, Pageable page);
 
     @Query("SELECT b from Booking b join Item i on b.itemId = i.id" +
             " where (i.owner = ?1 or b.bookerId = ?1)" +
             " and current_timestamp > b.start and current_timestamp < b.end ORDER BY (b.start) desc ")
-    List<Booking> getAllBookingOnCurrent(int requestor);
+    Page<Booking> getAllBookingOnCurrent(int requestor, Pageable page);
 
     @Query("SELECT b from Booking b join Item i on b.itemId = i.id" +
             " where (b.bookerId = ?1) and current_timestamp > b.end ORDER BY (b.start) desc ")
     List<Booking> getAllBookingOnPastForBooker(int requestor);
 
-    @Query("SELECT b from Booking b join Item i on b.itemId = i.id" +
-            " where (b.bookerId = ?1 or i.owner = ?1 ) and current_timestamp > b.end ORDER BY (b.start) desc ")
-    List<Booking> getAllBookingOnPastForBookerOrOwner(int requestor);
 
     @Query("SELECT b from Booking b join Item i on b.itemId = i.id" +
             " where i.owner = ?1 ORDER BY (b.start) desc  ")
-    List<Booking> getAllBookingsForItemOwner(int owner);
+    Page<Booking> getAllBookingsForItemOwner(int owner, Pageable page);
 
     @Query("SELECT b from Booking b join Item i on b.itemId = i.id" +
             " where i.owner = ?1 and b.status = 'REJECTED'  ORDER BY (b.start) desc  ")
-    List<Booking> getAllBookingsForItemOwnerRejected(int owner);
+    Page<Booking> getAllBookingsForItemOwnerRejected(int owner, Pageable page);
 
     @Query("SELECT b from Booking b join Item i on b.itemId = i.id" +
             " where i.owner = ?1 and b.status = 'WAITING'  ORDER BY (b.start) desc  ")
-    List<Booking> getAllBookingsForItemOwnerWaiting(int owner);
+    Page<Booking> getAllBookingsForItemOwnerWaiting(int owner, Pageable page);
 
     @Query("SELECT b from Booking b join Item i on b.itemId = i.id" +
             " where i.owner = ?1 and current_timestamp < b.start   ORDER BY (b.start) desc ")
-    List<Booking> getAllBookingsForItemOwnerFuture(int owner);
+    Page<Booking> getAllBookingsForItemOwnerFuture(int owner, Pageable page);
 
     @Query("SELECT b from Booking b join Item i on b.itemId = i.id" +
             " where i.owner = ?1 and current_timestamp > b.end   ORDER BY (b.start) desc ")
-    List<Booking> getAllBookingsForItemOwnerPast(int owner);
+    Page<Booking> getAllBookingsForItemOwnerPast(int owner, Pageable page);
 
     @Query("SELECT b from Booking b join Item i on b.itemId = i.id" +
             " where i.owner = ?1 and " +
             "current_timestamp > b.start and current_timestamp < b.end   ORDER BY (b.start) desc ")
-    List<Booking> getAllBookingsForItemOwnerCurrent(int owner);
+    Page<Booking> getAllBookingsForItemOwnerCurrent(int owner, Pageable page);
 
     @Query(value = "SELECT * from bookings b  left join items i on b.item_id = i.id" +
             " where i.id = ?1 and  b.end_date < ?2 order by b.end_date desc limit 1", nativeQuery = true)

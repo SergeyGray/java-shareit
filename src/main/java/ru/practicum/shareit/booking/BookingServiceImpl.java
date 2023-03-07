@@ -1,7 +1,8 @@
 package ru.practicum.shareit.booking;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.dto.BookingResponseDto;
@@ -45,7 +46,7 @@ public class BookingServiceImpl implements BookingService {
         status = (approved) ? BookingStatus.APPROVED : BookingStatus.REJECTED;
         booking = bookingRepository.findBookingByOwnerItem(bookingId, owner);
 
-        if (!booking.isPresent()) {
+        if (booking.isEmpty()) {
             throw new BookingStorageException("Неккоретный владелец вещи");
         }
         if (status == booking.get().getStatus()) {
@@ -58,70 +59,72 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public BookingResponseDto getBooking(int requestor, Integer bookingId) {
         Optional<Booking> booking = bookingRepository.getBooking(requestor, bookingId);
-        if (!booking.isPresent()) {
+        if (booking.isEmpty()) {
             throw new BookingStorageException("Бронирование не найдено");
         }
         return mapperToResponse(booking.get());
     }
 
     @Override
-    public List<BookingResponseDto> getAllBookings(int requestor, BookingState state) {
-        List<Booking> bookings;
+    public List<BookingResponseDto> getAllBookings(int requestor, BookingState state, int from, int size) {
+        Page<Booking> bookings;
+        PageRequest page = PageRequest.of(from, size);
         switch (state) {
             case ALL:
-                bookings = bookingRepository.getAllBooking(requestor);
+                bookings = bookingRepository.getAllBooking(requestor, page);
                 break;
             case REJECTED:
-                bookings = bookingRepository.getAllBookingRejected(requestor);
+                bookings = bookingRepository.getAllBookingRejected(requestor, page);
                 break;
             case WAITING:
-                bookings = bookingRepository.getAllBookingWaiting(requestor);
+                bookings = bookingRepository.getAllBookingWaiting(requestor, page);
                 break;
             case FUTURE:
-                bookings = bookingRepository.getAllBookingOnFuture(requestor);
+                bookings = bookingRepository.getAllBookingOnFuture(requestor, page);
                 break;
             case CURRENT:
-                bookings = bookingRepository.getAllBookingOnCurrent(requestor);
+                bookings = bookingRepository.getAllBookingOnCurrent(requestor, page);
                 break;
             case PAST:
-                bookings = bookingRepository.getAllBookingOnPast(requestor);
+                bookings = bookingRepository.getAllBookingOnPast(requestor, page);
                 break;
             default:
                 throw new BadRequestException(state.toString());
         }
-        if (bookings.size() == 0)
+        if (bookings.isEmpty())
             throw new BookingStorageException("Не найдены бронирования согласно условиям");
-        return bookings.stream().map(booking -> mapperToResponse(booking)).collect(Collectors.toList());
+        return bookings.stream().map(this::mapperToResponse).collect(Collectors.toList());
     }
 
     @Override
-    public List<BookingResponseDto> getAllBookingsForItemOwner(int owner, BookingState state) {
-        List<Booking> bookings;
+    public List<BookingResponseDto> getAllBookingsForItemOwner(int owner, BookingState state, int from, int size) {
+        Page<Booking> bookings;
+        PageRequest page = PageRequest.of(from, size);
         switch (state) {
             case ALL:
-                bookings = bookingRepository.getAllBookingsForItemOwner(owner);
+                bookings = bookingRepository.getAllBookingsForItemOwner(owner, page);
                 break;
             case FUTURE:
-                bookings = bookingRepository.getAllBookingsForItemOwnerFuture(owner);
+                bookings = bookingRepository.getAllBookingsForItemOwnerFuture(owner, page);
                 break;
             case REJECTED:
-                bookings = bookingRepository.getAllBookingsForItemOwnerRejected(owner);
+                bookings = bookingRepository.getAllBookingsForItemOwnerRejected(owner, page);
                 break;
             case WAITING:
-                bookings = bookingRepository.getAllBookingsForItemOwnerWaiting(owner);
+                bookings = bookingRepository.getAllBookingsForItemOwnerWaiting(owner, page);
                 break;
             case CURRENT:
-                bookings = bookingRepository.getAllBookingsForItemOwnerCurrent(owner);
+                bookings = bookingRepository.getAllBookingsForItemOwnerCurrent(owner, page);
                 break;
             case PAST:
-                bookings = bookingRepository.getAllBookingsForItemOwnerPast(owner);
+                bookings = bookingRepository.getAllBookingsForItemOwnerPast(owner, page);
                 break;
             default:
                 throw new BadRequestException(state.toString());
         }
-        if (bookings.size() == 0)
+        if (bookings.isEmpty())
             throw new BookingStorageException("Не найдены бронирования согласно условиям");
-        return bookings.stream().map(booking -> mapperToResponse(booking)).collect(Collectors.toList());
+        return bookings.stream().map(this::mapperToResponse).collect(Collectors.toList());
     }
 
     private BookingResponseDto mapperToResponse(Booking booking) {

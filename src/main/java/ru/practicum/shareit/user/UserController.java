@@ -13,7 +13,7 @@ import java.util.List;
 @RequestMapping(path = "/users")
 public class UserController {
 
-    private UserServiceImpl userService;
+    private UserService userService;
 
     @GetMapping("/{id}")
     public User getUser(@PathVariable Integer id) {

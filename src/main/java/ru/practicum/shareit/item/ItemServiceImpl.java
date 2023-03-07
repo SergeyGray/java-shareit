@@ -1,7 +1,6 @@
 package ru.practicum.shareit.item;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingRepository;
@@ -82,14 +81,14 @@ public class ItemServiceImpl implements ItemService {
         List<ItemResponseDTO> itemsResponseDto = items.stream().map(item -> ItemMapper.toItemResponseDto(item))
                 .collect(Collectors.toList());
         List<Booking> bookingsForItems = bookingRepository.findApprovedBookingForItemId(itemsResponseDto.stream()
-                        .map(itemResponseDTO -> itemResponseDTO.getId()).collect(Collectors.toList()));
-        for(ItemResponseDTO item:itemsResponseDto){
-            for(Booking booking: bookingsForItems){
-                if(item.getId() == booking.getItemId() && booking.getEnd().isBefore(LocalDateTime.now())){
+                .map(itemResponseDTO -> itemResponseDTO.getId()).collect(Collectors.toList()));
+        for (ItemResponseDTO item : itemsResponseDto) {
+            for (Booking booking : bookingsForItems) {
+                if (item.getId() == booking.getItemId() && booking.getEnd().isBefore(LocalDateTime.now())) {
                     item.setLastBooking(booking);
                 }
-                if(item.getId() == booking.getItemId() && booking.getStart().isAfter(LocalDateTime.now())
-                && item.getNextBooking() == null){
+                if (item.getId() == booking.getItemId() && booking.getStart().isAfter(LocalDateTime.now())
+                        && item.getNextBooking() == null) {
                     item.setNextBooking(booking);
                 }
             }
@@ -127,10 +126,10 @@ public class ItemServiceImpl implements ItemService {
         List<Comment> comments = commentRepository.findCommentsByItemId(item.getId());
         List<User> usersForComment = userRepository.findAllById(comments.stream()
                 .map(comment -> comment.getAuthorId()).collect(Collectors.toList()));
-        for(Comment comment:comments){
-            for(User user:usersForComment){
-                if(comment.getAuthorId() == user.getId()){
-                    response.add(CommentMapper.toCommentResponseDto(comment,user));
+        for (Comment comment : comments) {
+            for (User user : usersForComment) {
+                if (comment.getAuthorId() == user.getId()) {
+                    response.add(CommentMapper.toCommentResponseDto(comment, user));
                 }
             }
         }
