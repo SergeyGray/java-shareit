@@ -19,7 +19,7 @@ public class ItemRequestController {
     private final RequestClient client;
 
     @PostMapping
-    public ResponseEntity<Object> createItemRequest(@Valid @RequestBody  ItemRequestDto itemRequestDto,
+    public ResponseEntity<Object> createItemRequest(@Valid @RequestBody ItemRequestDto itemRequestDto,
                                                     @RequestHeader(X_SHARER_USER_ID) Long userId) {
         return client.createItemRequest(userId, itemRequestDto);
     }
@@ -31,8 +31,8 @@ public class ItemRequestController {
 
     @GetMapping("/all")
     public ResponseEntity<Object> getAllItemRequest(@RequestHeader(X_SHARER_USER_ID) Long userId,
-                                         @RequestParam(defaultValue = "0") Integer from,
-                                         @RequestParam(defaultValue = "10") Integer size) {
+                                                    @RequestParam(defaultValue = "0") Integer from,
+                                                    @RequestParam(defaultValue = "10") Integer size) {
         return client.getAllItemRequest(userId, from, size);
     }
 
