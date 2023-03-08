@@ -3,15 +3,15 @@ package ru.practicum.shareit.item;
 import ru.practicum.shareit.item.comment_dto.CommentDto;
 import ru.practicum.shareit.item.comment_dto.CommentResponseDto;
 import ru.practicum.shareit.item.item_dto.ItemDto;
-import ru.practicum.shareit.item.item_dto.ItemResponseDTO;
+import ru.practicum.shareit.item.item_dto.ItemResponseDto;
 
 import java.util.List;
 
 public interface ItemService {
 
-    ItemResponseDTO getItem(int id, int requestor);
+    ItemResponseDto getItem(int id, int requestor);
 
-    List<ItemResponseDTO> getAllItems(int owner);
+    List<ItemResponseDto> getAllItems(int owner);
 
     Item saveItem(int owner, ItemDto itemDto);
 

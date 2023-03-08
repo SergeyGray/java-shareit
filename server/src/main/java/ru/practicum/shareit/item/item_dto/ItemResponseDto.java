@@ -11,7 +11,7 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class ItemResponseDTO {
+public class ItemResponseDto {
     private int id;
     private String name;
     private String description;
@@ -22,7 +22,7 @@ public class ItemResponseDTO {
     private Booking nextBooking;
     private List<CommentResponseDto> comments = new ArrayList<>();
 
-    public ItemResponseDTO(int id, String name, String description, Boolean available, Integer owner, Integer request) {
+    public ItemResponseDto(int id, String name, String description, Boolean available, Integer owner, Integer request) {
         this.id = id;
         this.name = name;
         this.description = description;

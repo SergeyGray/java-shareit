@@ -49,7 +49,7 @@ public class BookingServiceImpl implements BookingService {
         if (booking.isEmpty()) {
             throw new BookingStorageException("Неккоретный владелец вещи");
         }
-        if (status == booking.get().getStatus()) {
+        if (status.equals(booking.get().getStatus())) {
             throw new BadRequestException("Одиннаковый статус");
         }
         booking.get().setStatus(status);

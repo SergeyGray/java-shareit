@@ -11,7 +11,7 @@ import ru.practicum.shareit.item.comment_dto.CommentMapper;
 import ru.practicum.shareit.item.comment_dto.CommentResponseDto;
 import ru.practicum.shareit.item.item_dto.ItemDto;
 import ru.practicum.shareit.item.item_dto.ItemMapper;
-import ru.practicum.shareit.item.item_dto.ItemResponseDTO;
+import ru.practicum.shareit.item.item_dto.ItemResponseDto;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.UserService;
@@ -56,9 +56,9 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemResponseDTO getItem(int id, int requestor) {
+    public ItemResponseDto getItem(int id, int requestor) {
         try {
-            ItemResponseDTO item = ItemMapper.toItemResponseDto(itemRepository.findById(id).get());
+            ItemResponseDto item = ItemMapper.toItemResponseDto(itemRepository.findById(id).get());
             if (item.getOwner() == requestor) {
                 item.setLastBooking(bookingRepository.findLastBookingForItem(id, LocalDateTime.now()).orElse(null));
                 item.setNextBooking(bookingRepository.findNextBookingForItem(id, LocalDateTime.now()).orElse(null));
@@ -72,18 +72,18 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemResponseDTO> getAllItems(int owner) {
+    public List<ItemResponseDto> getAllItems(int owner) {
         List<Item> items;
         if (owner > 0) {
             items = itemRepository.findByOwner(owner);
         } else {
             items = itemRepository.findAll();
         }
-        List<ItemResponseDTO> itemsResponseDto = items.stream().map(item -> ItemMapper.toItemResponseDto(item))
-                .sorted(Comparator.comparingInt(ItemResponseDTO::getId)).collect(Collectors.toList());
+        List<ItemResponseDto> itemsResponseDto = items.stream().map(ItemMapper::toItemResponseDto)
+                .sorted(Comparator.comparingInt(ItemResponseDto::getId)).collect(Collectors.toList());
         List<Booking> bookingsForItems = bookingRepository.findApprovedBookingForItemId(itemsResponseDto.stream()
-                .map(itemResponseDTO -> itemResponseDTO.getId()).collect(Collectors.toList()));
-        for (ItemResponseDTO item : itemsResponseDto) {
+                .map(ItemResponseDto::getId).collect(Collectors.toList()));
+        for (ItemResponseDto item : itemsResponseDto) {
             for (Booking booking : bookingsForItems) {
                 if (item.getId() == booking.getItemId() && booking.getEnd().isBefore(LocalDateTime.now())) {
                     item.setLastBooking(booking);
@@ -99,9 +99,6 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public CommentResponseDto createComment(int owner, int itemId, CommentDto commentDto) {
-        if (commentDto.getText().isBlank()) {
-            throw new BadRequestException("Не коорректный комментарий");
-        }
         if (bookingRepository.getAllBookingOnPastForBooker(owner).isEmpty()) {
             throw new BadRequestException("Не коорректный пользователь");
         }
@@ -116,17 +113,14 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<Item> searchItem(String text, Integer owner) {
-        if (text.isEmpty()) {
-            return new ArrayList<>();
-        }
         return itemRepository.searchItem(text, owner);
     }
 
-    private List<CommentResponseDto> getCommentsForItem(ItemResponseDTO item) {
+    private List<CommentResponseDto> getCommentsForItem(ItemResponseDto item) {
         List<CommentResponseDto> response = new ArrayList<>();
         List<Comment> comments = commentRepository.findCommentsByItemId(item.getId());
         List<User> usersForComment = userRepository.findAllById(comments.stream()
-                .map(comment -> comment.getAuthorId()).collect(Collectors.toList()));
+                .map(Comment::getAuthorId).collect(Collectors.toList()));
         for (Comment comment : comments) {
             for (User user : usersForComment) {
                 if (comment.getAuthorId() == user.getId()) {

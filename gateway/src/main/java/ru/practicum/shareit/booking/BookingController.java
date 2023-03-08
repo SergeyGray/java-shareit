@@ -10,6 +10,8 @@ import ru.practicum.shareit.booking.dto.BookingState;
 import ru.practicum.shareit.exception.BadRequestException;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 import static ru.practicum.shareit.item.ItemController.X_SHARER_USER_ID;
 
@@ -42,8 +44,8 @@ public class BookingController {
     @GetMapping
     public ResponseEntity<Object> getAllBookings(@RequestParam(defaultValue = "ALL") String state,
                                                  @RequestHeader(X_SHARER_USER_ID) Long bookerId,
-                                                 @RequestParam(defaultValue = "0") Integer from,
-                                                 @RequestParam(defaultValue = "10") Integer size) {
+                                                 @RequestParam(defaultValue = "0") @Min(0) Integer from,
+                                                 @RequestParam(defaultValue = "10") @Min(1) @Max(20) Integer size) {
         try {
             BookingState.valueOf(state);
         } catch (IllegalArgumentException e) {
@@ -55,8 +57,8 @@ public class BookingController {
     @GetMapping(path = "/owner")
     public ResponseEntity<Object> getAllBookingsForItemOwner(@RequestParam(defaultValue = "ALL") String state,
                                                              @RequestHeader(X_SHARER_USER_ID) Long ownerId,
-                                                             @RequestParam(defaultValue = "0") Integer from,
-                                                             @RequestParam(defaultValue = "10") Integer size) {
+                                                             @RequestParam(defaultValue = "0") @Min(0) Integer from,
+                                                             @RequestParam(defaultValue = "10") @Min(1) @Max(20) Integer size) {
         try {
             BookingState.valueOf(state);
         } catch (IllegalArgumentException e) {

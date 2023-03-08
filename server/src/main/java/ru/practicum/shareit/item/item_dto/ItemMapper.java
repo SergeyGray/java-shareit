@@ -26,7 +26,7 @@ public class ItemMapper {
         );
     }
 
-    public static Item toItem(ItemResponseDTO itemResponseDTO) {
+    public static Item toItem(ItemResponseDto itemResponseDTO) {
         return new Item(
                 itemResponseDTO.getId(),
                 itemResponseDTO.getName(),
@@ -37,8 +37,8 @@ public class ItemMapper {
         );
     }
 
-    public static ItemResponseDTO toItemResponseDto(Item item) {
-        return new ItemResponseDTO(
+    public static ItemResponseDto toItemResponseDto(Item item) {
+        return new ItemResponseDto(
                 item.getId(),
                 item.getName(),
                 item.getDescription(),

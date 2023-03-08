@@ -5,9 +5,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.comment_dto.CommentDto;
 import ru.practicum.shareit.item.comment_dto.CommentResponseDto;
 import ru.practicum.shareit.item.item_dto.ItemDto;
-import ru.practicum.shareit.item.item_dto.ItemResponseDTO;
+import ru.practicum.shareit.item.item_dto.ItemResponseDto;
 
-import javax.validation.Valid;
 import java.util.List;
 
 
@@ -19,8 +18,7 @@ public class ItemController {
     private ItemService itemService;
 
     @PostMapping()
-    public Item createItem(@RequestHeader("X-Sharer-User-Id") int owner,
-                           @Valid @RequestBody ItemDto itemDto) {
+    public Item createItem(@RequestHeader("X-Sharer-User-Id") int owner, @RequestBody ItemDto itemDto) {
         return itemService.saveItem(owner, itemDto);
     }
 
@@ -32,18 +30,19 @@ public class ItemController {
     }
 
     @GetMapping("/{id}")
-    public ItemResponseDTO getItem(@RequestHeader(value = "X-Sharer-User-Id", required = false) int requestor,
+    public ItemResponseDto getItem(@RequestHeader(value = "X-Sharer-User-Id", required = false) int requestor,
                                    @PathVariable Integer id) {
         return itemService.getItem(id, requestor);
     }
 
     @GetMapping()
-    public List<ItemResponseDTO> getAllItems(@RequestHeader(value = "X-Sharer-User-Id", required = false) int owner) {
+    public List<ItemResponseDto> getAllItems(@RequestHeader(value = "X-Sharer-User-Id", required = false) int owner) {
         return itemService.getAllItems(owner);
     }
 
     @GetMapping("/search")
-    public List<Item> searchItem(@RequestHeader(value = "X-Sharer-User-Id", required = false) int owner, @RequestParam String text) {
+    public List<Item> searchItem(@RequestHeader(value = "X-Sharer-User-Id", required = false) int owner,
+                                 @RequestParam String text) {
         return itemService.searchItem(text, owner);
     }
 

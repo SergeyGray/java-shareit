@@ -42,7 +42,8 @@ public class ItemRequestServiceImp implements ItemRequestService {
     public List<ItemRequestResponseDto> getAllItemsRequests(int owner, Integer from, Integer size) {
         userService.getUser(owner);
         PageRequest pageRequest = PageRequest.of(from, size, Sort.by("created").descending());
-        return findItemsForRequests(itemRequestRepository.findItemsRequestsForOwner(owner, pageRequest).stream().collect(Collectors.toList()));
+        return findItemsForRequests(itemRequestRepository.findItemsRequestsForOwner
+                (owner, pageRequest).stream().collect(Collectors.toList()));
     }
 
     @Override

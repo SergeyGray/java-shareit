@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.user_dto.UserDto;
 
-import javax.validation.Valid;
 import java.util.List;
 
 
@@ -26,7 +25,7 @@ public class UserController {
     }
 
     @PostMapping()
-    public User createUser(@Valid @RequestBody UserDto userDto) {
+    public User createUser(@RequestBody UserDto userDto) {
         return userService.saveUser(userDto);
     }
 

@@ -113,8 +113,9 @@ public class BookingControllerTest {
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().is(400))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.error", Matchers.is("Unknown state: ERROR")));
+                .andExpect(status().is(500))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error",
+                        Matchers.is("No enum constant ru.practicum.shareit.booking.BookingState.ERROR")));
     }
 
     @Test
@@ -145,7 +146,8 @@ public class BookingControllerTest {
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().is(400))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.error", Matchers.is("Unknown state: ERROR")));
+                .andExpect(status().is(500))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error",
+                        Matchers.is("No enum constant ru.practicum.shareit.booking.BookingState.ERROR")));
     }
 }
